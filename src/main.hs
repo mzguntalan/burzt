@@ -25,5 +25,8 @@ negateVectorGraphic v = v . Prelude.negate
 subtractVectorGraphic :: VectorGraphic -> VectorGraphic -> VectorGraphic
 subtractVectorGraphic v w = addVectorGraphic v (negateVectorGraphic w)
 
+scaleVectorGraphic :: Float -> VectorGraphic -> VectorGraphic
+scaleVectorGraphic s v t = (s Prelude.* x, s Prelude.* y) where (x, y) = v t 
+
 main :: IO()
 main = putStrLn "Hello World"
