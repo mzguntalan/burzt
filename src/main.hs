@@ -1,4 +1,6 @@
 module Main where
+import Distribution.SPDX (LicenseId(MakeIndex))
+import Text.PrettyPrint.Annotated.HughesPJClass (PrettyLevel(PrettyLevel))
 
 
 class Vector a where 
@@ -27,8 +29,6 @@ instance Vector Point where
     negate = negatePoint
 
 
-
-
 type VectorGraphic = Float -> (Float, Float)
 vectorGraphicParameter :: Float -> Float
 vectorGraphicParameter x 
@@ -55,11 +55,19 @@ instance Vector VectorGraphic where
     (*) = scaleVectorGraphic
     negate = negateVectorGraphic
 
-makeCurve :: Point -> VectorGraphic
-makeCurve = const 
--- makeCurve :: Point -> Point -> VectorGraphic
--- makeCurve :: Point -> Point -> Point -> VectorGraphic
 
+
+
+makeCurve :: [Main.Point] -> VectorGraphic
+makeCurve [] t = (0.0, 0.0) :: Main.Point
+makeCurve [p] t = p
+makeCurve [start, end] t = start Main.+ (t Main.* (end Main.- start)) 
+makeCurve [start, mid, end] t = 
+    (a Main.* start) Main.+ (b Main.* mid) Main.+ (c Main.* end) 
+    where 
+        a = (1 Prelude.- t) Prelude.* (1 Prelude.- t)
+        b = 2 Prelude.* (1 Prelude.- t) Prelude.* t
+        c = t Prelude.* t
 
 
 
