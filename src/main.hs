@@ -1,6 +1,4 @@
 module Main where
-import Distribution.SPDX (LicenseId(MakeIndex))
-import Text.PrettyPrint.Annotated.HughesPJClass (PrettyLevel(PrettyLevel))
 
 
 class Vector a where 
@@ -55,9 +53,6 @@ instance Vector VectorGraphic where
     (*) = scaleVectorGraphic
     negate = negateVectorGraphic
 
-
-
-
 makeCurve :: [Main.Point] -> VectorGraphic
 makeCurve [] t = (0.0, 0.0) :: Main.Point
 makeCurve [p] t = p
@@ -68,6 +63,45 @@ makeCurve [start, mid, end] t =
         a = (1 Prelude.- t) Prelude.* (1 Prelude.- t)
         b = 2 Prelude.* (1 Prelude.- t) Prelude.* t
         c = t Prelude.* t
+
+
+origin :: Point
+origin = makeCurve [] 0.0
+
+distance :: Point -> Point -> Float
+distance (x1, y1) (x2, y2) = 
+    let dx = x1 Prelude.- x2
+        dy = y1 Prelude.- y2 
+        rx = dx Prelude.* rx
+        ry = dy Prelude.* dy
+    in sqrt (rx Prelude.+ ry)
+
+arcLength :: VectorGraphic -> Point -> Point -> Float -> Float
+arcLength v start end precision  
+    | distance start end <= precision = distance start end
+    | otherwise = arcLength v start mid precision Prelude.+ arcLength v mid end precision 
+        where mid = 0.5 Main.* (start Main.+ end)
+
+withinTolerance :: Float -> Float -> Float -> Bool
+withinTolerance x goal tol 
+    | goal Prelude.- tol <= x && x <= goal Prelude.+ tol = True
+    | otherwise = False 
+
+
+    
+
+parameterizeByArcLength :: VectorGraphic -> Float -> VectorGraphic
+parameterizeByArcLength v precision s = parameterizeByArcLength' v precision start end s
+    where parameterizeByArcLength' :: VectorGraphic -> Float -> Point -> Point -> VectorGraphic
+          parameterizeByArcLength' v p a b s = 
+            let arc = arcLength v origin b precision
+                mid = 0.5 Main.* (b Main.- a)
+                in case () of _
+                                | withinTolerance arc s precision -> mid
+                                | arc < s -> parameterizeByArcLength' v p mid b s 
+                                | arc > s -> parameterizeByArcLength' v p a mid s
+          start = origin
+          end = v 1.0
 
 
 
