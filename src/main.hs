@@ -1,5 +1,8 @@
 module Main where
 
+import Debug.Trace
+import Data.Time (midday)
+
 
 class Vector a where 
     (+) :: a -> a -> a 
@@ -72,37 +75,33 @@ distance :: Point -> Point -> Float
 distance (x1, y1) (x2, y2) = 
     let dx = x1 Prelude.- x2
         dy = y1 Prelude.- y2 
-        rx = dx Prelude.* rx
+        rx = dx Prelude.* dx
         ry = dy Prelude.* dy
     in sqrt (rx Prelude.+ ry)
 
-arcLength :: VectorGraphic -> Point -> Point -> Float -> Float
-arcLength v start end precision  
-    | distance start end <= precision = distance start end
-    | otherwise = arcLength v start mid precision Prelude.+ arcLength v mid end precision 
-        where mid = 0.5 Main.* (start Main.+ end)
+
+floatList :: Float -> Float -> Float -> [Float]
+floatList start end interval
+    | start > end = []
+    | start Prelude.+ interval > end = [start]
+    | otherwise = start : floatList (start Prelude.+ interval) end interval
+
+
+arcLength :: VectorGraphic -> Float -> Float -> Float -> Float
+arcLength v precision a b =
+    case floatList a b precision of 
+        [] -> 0.0 
+        [p] -> p 
+        (p:ps) -> sum distanceBetweenPairs 
+                      where distanceBetweenPairs = map distance' (zip (p:ps) ps) 
+                                                   where distance' (p1, p2) = distance (v p1) (v p2) 
+
+
 
 withinTolerance :: Float -> Float -> Float -> Bool
 withinTolerance x goal tol 
     | goal Prelude.- tol <= x && x <= goal Prelude.+ tol = True
     | otherwise = False 
-
-
-    
-
-parameterizeByArcLength :: VectorGraphic -> Float -> VectorGraphic
-parameterizeByArcLength v precision s = parameterizeByArcLength' v precision start end s
-    where parameterizeByArcLength' :: VectorGraphic -> Float -> Point -> Point -> VectorGraphic
-          parameterizeByArcLength' v p a b s = 
-            let arc = arcLength v origin b precision
-                mid = 0.5 Main.* (b Main.- a)
-                in case () of _
-                                | withinTolerance arc s precision -> mid
-                                | arc < s -> parameterizeByArcLength' v p mid b s 
-                                | arc > s -> parameterizeByArcLength' v p a mid s
-          start = origin
-          end = v 1.0
-
 
 
 
