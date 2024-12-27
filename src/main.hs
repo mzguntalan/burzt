@@ -131,6 +131,11 @@ reparameterizeByArcPortion :: VectorGraphic -> Integer -> Float -> Float -> Vect
 reparameterizeByArcPortion v numDecimalPlaces start end targetPortion = 
     let targetArcLength = targetPortion Prelude.* arcLength v (1 / 10 ^ numDecimalPlaces) start end 
         in reparameterizeByArcLength v numDecimalPlaces start end targetArcLength
+
+vgToPoints :: VectorGraphic -> Integer -> Float -> Float -> [Point]
+vgToPoints v numPoints start end = map v ts 
+    where ts = floatList start end interval 
+          interval = (end Prelude.- start) / (fromIntegral numPoints Prelude.- 1)
         
 main :: IO()
 main = putStrLn "Hello World"
