@@ -96,8 +96,6 @@ arcLength v precision a b =
                       where distanceBetweenPairs = map distance' (zip (p:ps) ps) 
                                                    where distance' (p1, p2) = distance (v p1) (v p2) 
 
-
-
 withinTolerance :: Float -> Float -> Float -> Bool
 withinTolerance x goal tol 
     | goal Prelude.- tol <= x && x <= goal Prelude.+ tol = True
@@ -109,6 +107,17 @@ truncatePlaces r n =
         x = r Prelude.* e
         y = fromIntegral (floor x) 
         in y / e
+
+
+binarySearchIncreasing :: (Float -> Float) -> Integer -> Float -> Float -> Float 
+binarySearchIncreasing incFunc numDecimalPlaces start end = binarySearchIncreasing' incFunc numDecimalPlaces start end 0 
+    where binarySearchIncreasing' incFunc numDecimalPlaces start end depth 
+           | depth == 10 = mid 
+           | truncatePlaces val numDecimalPlaces == 0.0 = mid 
+           | val > 0.0 = binarySearchIncreasing' incFunc numDecimalPlaces start mid (depth Prelude.+ 1)
+           | otherwise = binarySearchIncreasing' incFunc numDecimalPlaces mid end (depth Prelude.+ 1)
+           where mid = 0.5 Prelude.* (start Prelude.+ end)
+                 val = incFunc mid
 
 
 main :: IO()
