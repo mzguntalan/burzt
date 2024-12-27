@@ -103,6 +103,12 @@ withinTolerance x goal tol
     | goal Prelude.- tol <= x && x <= goal Prelude.+ tol = True
     | otherwise = False 
 
+truncatePlaces :: Float -> Integer -> Float
+truncatePlaces r n = 
+    let e = 10 ^ n 
+        x = r Prelude.* e
+        y = fromIntegral (floor x) 
+        in y / e
 
 
 main :: IO()
