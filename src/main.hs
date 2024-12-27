@@ -1,8 +1,5 @@
 module Main where
 
-import Debug.Trace
-import Data.Time (midday)
-
 
 class Vector a where 
     (+) :: a -> a -> a 
