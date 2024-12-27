@@ -120,5 +120,17 @@ binarySearchIncreasing incFunc numDecimalPlaces start end = binarySearchIncreasi
                  val = incFunc mid
 
 
+reparameterizeByArcLength :: VectorGraphic -> Integer -> Float -> Float -> VectorGraphic
+reparameterizeByArcLength v numDecimalPlaces start end targetArcLength = 
+    let arcLengthFromBeginning = arcLength v (1 / 10 ^ numDecimalPlaces) start 
+        d x = arcLengthFromBeginning x Prelude.- targetArcLength 
+        t = binarySearchIncreasing d numDecimalPlaces (arcLengthFromBeginning start) (arcLengthFromBeginning end)
+        in v t
+
+reparameterizeByArcPortion :: VectorGraphic -> Integer -> Float -> Float -> VectorGraphic
+reparameterizeByArcPortion v numDecimalPlaces start end targetPortion = 
+    let targetArcLength = targetPortion Prelude.* arcLength v (1 / 10 ^ numDecimalPlaces) start end 
+        in reparameterizeByArcLength v numDecimalPlaces start end targetArcLength
+        
 main :: IO()
 main = putStrLn "Hello World"
