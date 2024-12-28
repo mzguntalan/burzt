@@ -135,14 +135,5 @@ vgToPoints v numPoints start end = map v ts
     ts = floatList start end interval
     interval = (end Prelude.- start) / (fromIntegral numPoints Prelude.- 1)
 
-x :: Point
-x = (5.0, 5.3)
-
-y :: Point
-y = (3.4, 4.3)
-
-line :: VectorGraphic
-line = makeCurve [x, y]
-
 main :: IO ()
 main = putStrLn "Hello World"
