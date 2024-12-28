@@ -91,11 +91,6 @@ arcLength v precision a b =
             distanceBetweenPairs = map distance' (zip (p : ps) ps)
             distance' (p1, p2) = distance (v p1) (v p2)
 
-withinTolerance :: Float -> Float -> Float -> Bool
-withinTolerance x goal tol
-    | goal Prelude.- tol <= x && x <= goal Prelude.+ tol = True
-    | otherwise = False
-
 truncatePlaces :: Float -> Integer -> Float
 truncatePlaces r n =
     let e = 10 ^ n
