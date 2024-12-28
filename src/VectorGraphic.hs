@@ -90,8 +90,7 @@ arcLength v precision a b =
         (p : ps) -> sum distanceBetweenPairs
           where
             distanceBetweenPairs = map distance' (zip (p : ps) ps)
-              where
-                distance' (p1, p2) = distance (v p1) (v p2)
+            distance' (p1, p2) = distance (v p1) (v p2)
 
 withinTolerance :: Float -> Float -> Float -> Bool
 withinTolerance x goal tol
@@ -113,9 +112,8 @@ binarySearchIncreasing incFunc numDecimalPlaces start end = binarySearchIncreasi
         | truncatePlaces val numDecimalPlaces == 0.0 = mid
         | val > 0.0 = binarySearchIncreasing' incFunc numDecimalPlaces start mid (depth Prelude.+ 1)
         | otherwise = binarySearchIncreasing' incFunc numDecimalPlaces mid end (depth Prelude.+ 1)
-      where
-        mid = 0.5 Prelude.* (start Prelude.+ end)
-        val = incFunc mid
+    mid = 0.5 Prelude.* (start Prelude.+ end)
+    val = incFunc mid
 
 reparameterizeByArcLength :: VectorGraphic -> Integer -> Float -> Float -> VectorGraphic
 reparameterizeByArcLength v numDecimalPlaces start end targetArcLength =
