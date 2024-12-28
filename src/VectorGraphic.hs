@@ -34,10 +34,9 @@ vectorGraphicParameter x
     | otherwise = vectorGraphicParameter (Prelude.negate x)
 
 addVectorGraphic :: VectorGraphic -> VectorGraphic -> VectorGraphic
-addVectorGraphic v w t = case () of
-    _
-        | vectorGraphicParameter t <= 0.5 -> v t
-        | otherwise -> w t
+addVectorGraphic v w t
+    | vectorGraphicParameter t <= 0.5 = v (2 Prelude.* t)
+    | otherwise = w (2 Prelude.* (t Prelude.- 0.5))
 
 negateVectorGraphic :: VectorGraphic -> VectorGraphic
 negateVectorGraphic v = v . Prelude.negate
